@@ -116,4 +116,31 @@ describe("Contract cases", function () {
       expect(tx).to.emit;
     });
   });
+
+  describe("Deposit Ether", function () {
+    it("Should be able to deposit", async function () {
+      const { saveERC20orEther } = await loadFixture(deployContractsInstances);
+      await saveERC20orEther.etherdeposit({ value: ethers.parseEther("1") });
+      const balance = await saveERC20orEther.etherContractBal();
+      expect(balance).to.equal(1000000000000000000n);
+    });
+
+    it("Should revert when trying deposit zero value", async function () {
+      const { saveERC20orEther } = await loadFixture(deployContractsInstances);
+
+      await expect(
+        saveERC20orEther.etherdeposit({ value: 0 })
+      ).to.be.revertedWith("can't save zero value");
+    });
+  });
+
+  describe("Withdraw Ether", function () {
+    it("Should be able to withdraw", async function () {
+      const { saveERC20orEther } = await loadFixture(deployContractsInstances);
+
+      await saveERC20orEther.etherdeposit({ value: ethers.parseEther("1") });
+      const bal = await saveERC20orEther.etherWithdraw();
+      expect(bal.value).to.equal(0);
+    });
+  });
 });
