@@ -142,5 +142,12 @@ describe("Contract cases", function () {
       const bal = await saveERC20orEther.etherWithdraw();
       expect(bal.value).to.equal(0);
     });
+
+    it("Amount should be greater than zero", async function () {
+      const { saveERC20orEther } = await loadFixture(deployContractsInstances);
+      expect(saveERC20orEther.etherWithdraw()).to.be.rejectedWith(
+        "you don't have any savings"
+      );
+    });
   });
 });
